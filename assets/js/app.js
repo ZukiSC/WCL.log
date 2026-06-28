@@ -33,6 +33,12 @@ window.addEventListener('DOMContentLoaded', () => {
     // Ensure print summary stats are refreshed right before printing
     window.addEventListener('beforeprint', () => {
         updateCalculations();
+        renderPrintSummaryTable();
+    });
+
+    // Restore the full table view after printing
+    window.addEventListener('afterprint', () => {
+        renderTable();
     });
 });
 
@@ -714,6 +720,51 @@ async function importFromGithub() {
         console.error(err);
         showToast(err.message, "error");
     }
+}
+
+// Generate a condensed, space-efficient table for print output
+function renderPrintSummaryTable() {
+    const tbody = document.getElementById('entries-tbody');
+    if (!tbody) return;
+
+    if (workLogs.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="px-6 py-8 text-center text-xs text-slate-400">No entries to display in summary.</td></tr>';
+        return;
+    }
+
+    // Sort logs by date descending
+    const sorted = [...workLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    let html = '';
+    sorted.forEach(log => {
+        const formattedDate = new Date(log.date).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        });
+
+        // Truncate description to 100 characters for print
+        const desc = log.description || '';
+        const shortDesc = desc.length > 100 ? desc.substring(0, 97) + '...' : desc;
+
+        // Truncate learnings to 80 characters for print
+        const learn = log.learnings || '';
+        const shortLearn = learn.length > 80 ? learn.substring(0, 77) + '...' : learn;
+
+        const escDesc = escapeHtml(shortDesc);
+        const escLearn = escapeHtml(shortLearn);
+
+        html += `
+            <tr>
+                <td class="px-3 py-2 text-xs font-medium text-slate-800 whitespace-nowrap">${formattedDate}</td>
+                <td class="px-3 py-2 text-xs text-center font-semibold text-slate-800">${parseFloat(log.hours).toFixed(1)}</td>
+                <td class="px-3 py-2 text-xs text-slate-700">${escDesc}</td>
+                <td class="px-3 py-2 text-xs text-slate-600">${escLearn ? escLearn : '<span class="text-slate-400 italic">—</span>'}</td>
+            </tr>
+        `;
+    });
+
+    tbody.innerHTML = html;
 }
 
 // Vanilla Custom Toast System
