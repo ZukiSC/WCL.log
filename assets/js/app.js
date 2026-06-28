@@ -29,6 +29,11 @@ window.addEventListener('DOMContentLoaded', () => {
             dropdown.classList.add('hidden');
         }
     });
+
+    // Ensure print summary stats are refreshed right before printing
+    window.addEventListener('beforeprint', () => {
+        updateCalculations();
+    });
 });
 
 // Load profile and logs from localStorage
@@ -38,7 +43,7 @@ function loadData() {
     if (savedLogs) {
         try {
             workLogs = JSON.parse(savedLogs);
-        } catch(e) {
+        } catch (e) {
             console.error("Error parsing saved work logs:", e);
             workLogs = [];
         }
@@ -49,7 +54,7 @@ function loadData() {
     if (savedProfile) {
         try {
             profile = JSON.parse(savedProfile);
-        } catch(e) {
+        } catch (e) {
             console.error("Error parsing profile:", e);
         }
     } else {
@@ -135,7 +140,7 @@ function saveProfile() {
     profile.name = nameVal;
     profile.role = roleVal || "Part-time Programmer";
     profile.githubToken = tokenVal;
-    
+
     saveProfileToStorage();
     updateProfileUI();
     closeSettingsModal();
@@ -152,7 +157,7 @@ function setTheme(dark) {
     isDarkMode = dark;
     const themeIcon = document.getElementById('theme-icon');
     if (!themeIcon) return;
-    
+
     if (isDarkMode) {
         document.documentElement.classList.add('dark');
         themeIcon.className = "fa-solid fa-sun text-lg text-amber-400";
@@ -314,7 +319,7 @@ function updateCalculations() {
         const dates = workLogs.map(log => new Date(log.date));
         const minDate = new Date(Math.min.apply(null, dates));
         const maxDate = new Date(Math.max.apply(null, dates));
-        
+
         const opt = { month: 'short', day: 'numeric', year: 'numeric' };
         if (minDate.toDateString() === maxDate.toDateString()) {
             dateText = minDate.toLocaleDateString('en-US', opt);
@@ -344,9 +349,9 @@ function renderTable() {
 
     // Filter entries
     const filteredLogs = workLogs.filter(log => {
-        const matchesSearch = log.description.toLowerCase().includes(searchQuery) || 
-                              (log.learnings && log.learnings.toLowerCase().includes(searchQuery));
-        
+        const matchesSearch = log.description.toLowerCase().includes(searchQuery) ||
+            (log.learnings && log.learnings.toLowerCase().includes(searchQuery));
+
         let matchesStart = true;
         if (filterStart) {
             matchesStart = new Date(log.date) >= new Date(filterStart);
@@ -496,7 +501,7 @@ function triggerExportJSON() {
 
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj, null, 2));
     const downloadAnchor = document.createElement('a');
-    
+
     const fileSafeName = profile.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
     downloadAnchor.setAttribute("href", dataStr);
     downloadAnchor.setAttribute("download", `wcl_backup_${fileSafeName}_${new Date().toISOString().split('T')[0]}.json`);
@@ -513,10 +518,10 @@ function handleImportJSON(event) {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         try {
             const parsed = JSON.parse(e.target.result);
-            
+
             if (parsed.logs && Array.isArray(parsed.logs)) {
                 // Confirm override
                 if (confirm(`Found ${parsed.logs.length} work log entries. Would you like to merge them with current logs? (Click CANCEL to overwrite current logs completely)`)) {
@@ -544,7 +549,7 @@ function handleImportJSON(event) {
             } else {
                 showToast("Invalid JSON schema. Ensure it contains a valid log entries list.", "error");
             }
-        } catch(err) {
+        } catch (err) {
             console.error("Error reading import file:", err);
             showToast("Failed to parse JSON file.", "error");
         }
@@ -661,7 +666,7 @@ async function importFromGithub() {
         }
 
         const data = await response.json();
-        
+
         let date = '';
         let description = '';
         let learnings = '';
@@ -670,12 +675,12 @@ async function importFromGithub() {
         if (type === 'commit') {
             const rawDate = data.commit.author.date || data.commit.committer.date;
             date = rawDate.split('T')[0];
-            
+
             const message = data.commit.message;
             const lines = message.split('\n');
             description = lines[0]; // First line of commit message
             learnings = lines.slice(1).join('\n').trim(); // Detailed body of commit message
-            
+
             // Attempt parsing hours from message, e.g. "Completed feature [4h]" or "refactor (time: 1.5h)"
             const hoursMatch = message.match(/\b(\d+(?:\.\d+)?)\s*h(?:r|s)?\b/i);
             if (hoursMatch) {
@@ -685,7 +690,7 @@ async function importFromGithub() {
             date = (data.merged_at || data.created_at).split('T')[0];
             description = `PR #${data.number}: ${data.title}`;
             learnings = data.body || '';
-            
+
             const hoursMatch = (data.title + ' ' + (data.body || '')).match(/\b(\d+(?:\.\d+)?)\s*h(?:r|s)?\b/i);
             if (hoursMatch) {
                 hours = parseFloat(hoursMatch[1]);
@@ -715,13 +720,13 @@ async function importFromGithub() {
 function showToast(message, type = "info") {
     const container = document.getElementById('toast-container');
     if (!container) return;
-    
+
     const toast = document.createElement('div');
-    
+
     // Setup style variables
     let icon = '<i class="fa-solid fa-info-circle"></i>';
     let bgClass = 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700';
-    
+
     if (type === "success") {
         icon = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
         bgClass = 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-emerald-100 dark:border-emerald-950/30';
@@ -743,7 +748,7 @@ function showToast(message, type = "info") {
     `;
 
     container.appendChild(toast);
-    
+
     // Animation triggers
     setTimeout(() => {
         toast.classList.add('toast-active');

@@ -3,22 +3,28 @@
     width: 8px;
     height: 8px;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent;
 }
+
 .dark ::-webkit-scrollbar-track {
     background: #1f2937;
 }
+
 ::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 4px;
 }
+
 .dark ::-webkit-scrollbar-thumb {
     background: #4b5563;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
+
 .dark ::-webkit-scrollbar-thumb:hover {
     background: #6b7280;
 }
@@ -28,6 +34,7 @@
     transform: translateY(1rem) scale(0.95);
     opacity: 0;
 }
+
 .toast-active {
     transform: translateY(0) scale(1);
     opacity: 1;
@@ -44,12 +51,15 @@
         padding: 0 !important;
         margin: 0 !important;
     }
+
     .no-print {
         display: none !important;
     }
+
     .print-only {
         display: block !important;
     }
+
     .print-card {
         border: none !important;
         box-shadow: none !important;
@@ -57,11 +67,13 @@
         padding: 0 !important;
         margin: 0 !important;
     }
+
     .print-table {
         width: 100% !important;
         border-collapse: collapse !important;
         margin-top: 1.5rem !important;
     }
+
     .print-table th {
         background-color: #f3f4f6 !important;
         color: black !important;
@@ -72,18 +84,45 @@
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
+
     .print-table td {
         border: 1px solid #e5e7eb !important;
         padding: 8px 12px !important;
         vertical-align: top !important;
     }
+
     /* Avoid splitting rows across pages */
     tr {
         page-break-inside: avoid !important;
     }
+
     /* Add formal report headers */
     @page {
         size: portrait;
         margin: 1.5cm;
+    }
+
+    /* Fix: Show desktop table in print (override Tailwind hidden/md:table) */
+    #entries-tbody {
+        display: table-row-group !important;
+    }
+
+    .print-table {
+        display: table !important;
+    }
+
+    /* Hide mobile card list in print */
+    #entries-mobile-list {
+        display: none !important;
+    }
+
+    /* Ensure print-only header summary cards are visible */
+    .print-only {
+        display: block !important;
+    }
+
+    /* Ensure empty state is hidden in print */
+    #empty-state {
+        display: none !important;
     }
 }
