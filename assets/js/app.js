@@ -602,6 +602,103 @@ function loadDemoData() {
     showToast("Demo contribution logs loaded.", "success");
 }
 
+// Toggle Batch Log accordion panel
+function toggleBatchPanel() {
+    const panel = document.getElementById('batch-import-panel');
+    const chevron = document.getElementById('batch-panel-chevron');
+    if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        chevron.style.transform = 'rotate(180deg)';
+        updateBatchDayCount();
+        document.getElementById('batch-start-date').addEventListener('change', updateBatchDayCount);
+        document.getElementById('batch-end-date').addEventListener('change', updateBatchDayCount);
+    } else {
+        panel.classList.add('hidden');
+        chevron.style.transform = 'rotate(0deg)';
+    }
+}
+
+// Update the day count badge in the batch button
+function updateBatchDayCount() {
+    const start = document.getElementById('batch-start-date').value;
+    const end = document.getElementById('batch-end-date').value;
+    const badge = document.getElementById('batch-day-count');
+    if (start && end) {
+        const s = new Date(start);
+        const e = new Date(end);
+        const diff = Math.floor((e - s) / (1000 * 60 * 60 * 24)) + 1;
+        badge.textContent = diff > 0 ? diff : 0;
+    } else {
+        badge.textContent = '0';
+    }
+}
+
+// Set date range to the past 7 days
+function setLastWeek() {
+    const today = new Date();
+    const weekAgo = new Date(today);
+    weekAgo.setDate(today.getDate() - 6);
+    document.getElementById('batch-start-date').value = weekAgo.toISOString().split('T')[0];
+    document.getElementById('batch-end-date').value = today.toISOString().split('T')[0];
+    updateBatchDayCount();
+}
+
+// Submit batch log entries - creates one entry per day in the date range
+function handleBatchSubmit() {
+    const start = document.getElementById('batch-start-date').value;
+    const end = document.getElementById('batch-end-date').value;
+    const hours = parseFloat(document.getElementById('batch-hours').value);
+    const description = document.getElementById('batch-description').value.trim();
+    const learnings = document.getElementById('batch-learnings').value.trim();
+
+    if (!start || !end) {
+        showToast("Please select both start and end dates.", "warning");
+        return;
+    }
+    if (isNaN(hours) || hours <= 0) {
+        showToast("Please enter valid hours per day.", "warning");
+        return;
+    }
+    if (!description) {
+        showToast("Please enter a task description.", "warning");
+        return;
+    }
+
+    const s = new Date(start);
+    const e = new Date(end);
+    if (e < s) {
+        showToast("End date must be after start date.", "error");
+        return;
+    }
+
+    let count = 0;
+    const current = new Date(s);
+    while (current <= e) {
+        const dateStr = current.toISOString().split('T')[0];
+        const newLog = {
+            id: 'log_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            date: dateStr,
+            hours: hours,
+            description: description + (learnings ? ` [${learnings}]` : ''),
+            learnings: learnings || ''
+        };
+        workLogs.push(newLog);
+        current.setDate(current.getDate() + 1);
+        count++;
+    }
+
+    saveData();
+    showToast(`${count} daily log entries created successfully!`, "success");
+
+    // Clear batch form fields
+    document.getElementById('batch-description').value = '';
+    document.getElementById('batch-learnings').value = '';
+    document.getElementById('batch-start-date').value = '';
+    document.getElementById('batch-end-date').value = '';
+    document.getElementById('batch-hours').value = '2.0';
+    updateBatchDayCount();
+}
+
 // Toggle GitHub import accordion panel
 function toggleGithubPanel() {
     const panel = document.getElementById('github-import-panel');
