@@ -531,6 +531,9 @@
                                     Days</label>
                                 <div class="flex gap-1.5">
                                     <label class="day-checkbox-wrapper"><input type="checkbox"
+                                            class="day-checkbox-input" value="0"><span
+                                            class="day-checkbox-label">Sun</span></label>
+                                    <label class="day-checkbox-wrapper"><input type="checkbox"
                                             class="day-checkbox-input" value="1"><span
                                             class="day-checkbox-label">M</span></label>
                                     <label class="day-checkbox-wrapper"><input type="checkbox"
@@ -570,10 +573,30 @@
                                 class="px-3 py-2 text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 hover:bg-brand-100 dark:hover:bg-brand-900/40 rounded-lg font-semibold text-xs transition-all cursor-pointer"
                                 title="Set weekly topics for each subject"><i class="fa-solid fa-pencil"></i></button>
                         </div>
-                        <div>
-                            <button onclick="logAllSubjectsSinceSchoolStart()"
-                                class="w-full px-3 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"><i
-                                    class="fa-solid fa-clock-rotate-left"></i> Log All Since School Start</button>
+                        <!-- Log Subjects in Date Range -->
+                        <div
+                            class="border border-indigo-200 dark:border-indigo-800/60 rounded-xl overflow-hidden bg-indigo-50/60 dark:bg-indigo-900/20">
+                            <div class="p-3 space-y-3">
+                                <p class="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold"><i
+                                        class="fa-solid fa-clock-rotate-left"></i> Log All Subjects in Date Range</p>
+                                <div class="flex gap-2">
+                                    <div class="flex-1">
+                                        <label
+                                            class="text-[9px] font-semibold text-indigo-600 dark:text-indigo-400 block mb-0.5">From</label>
+                                        <input type="date" id="range-start-date"
+                                            class="w-full px-2 py-1.5 border border-indigo-200 dark:border-indigo-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    </div>
+                                    <div class="flex-1">
+                                        <label
+                                            class="text-[9px] font-semibold text-indigo-600 dark:text-indigo-400 block mb-0.5">To</label>
+                                        <input type="date" id="range-end-date"
+                                            class="w-full px-2 py-1.5 border border-indigo-200 dark:border-indigo-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    </div>
+                                </div>
+                                <button onclick="logSubjectsInRange()"
+                                    class="w-full px-3 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"><i
+                                        class="fa-solid fa-calendar-days"></i> Log Subjects in Range</button>
+                            </div>
                         </div>
                         <!-- Subject List -->
                         <div id="subject-list" class="space-y-2 max-h-96 overflow-y-auto">

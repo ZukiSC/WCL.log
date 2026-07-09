@@ -799,7 +799,7 @@ function renderSubjectList() {
     }
 
     let html = '';
-    const dayNames = ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const weekKey = getWeekKey(new Date());
 
     subjects.forEach(subj => {
@@ -901,10 +901,13 @@ function logAllSubjectsForWeek() {
     showToast(`✅ ${msg}${skipMsg}`, count > 0 ? "success" : "info");
 }
 
-// ===== LOG ALL SUBJECTS SINCE SCHOOL START =====
-function logAllSubjectsSinceSchoolStart() {
-    if (!schoolStartDate) {
-        showToast("Please set your School Start Date first (Settings > Edit Profile).", "warning");
+// ===== LOG ALL SUBJECTS IN A CUSTOM DATE RANGE =====
+function logSubjectsInRange() {
+    const startVal = document.getElementById('range-start-date').value;
+    const endVal = document.getElementById('range-end-date').value;
+
+    if (!startVal || !endVal) {
+        showToast("Please select both From and To dates.", "warning");
         return;
     }
     if (subjects.length === 0) {
@@ -912,31 +915,29 @@ function logAllSubjectsSinceSchoolStart() {
         return;
     }
 
-    const startDate = new Date(schoolStartDate);
-    const today = new Date();
-    today.setHours(23, 59, 59, 999);
+    const startDate = new Date(startVal);
+    const endDate = new Date(endVal);
+    endDate.setHours(23, 59, 59, 999);
 
-    if (startDate > today) {
-        showToast("School start date cannot be in the future.", "error");
+    if (endDate < startDate) {
+        showToast("End date must be after start date.", "error");
         return;
     }
 
     // Confirm with user about the scope
-    const totalWeeks = Math.ceil((today - startDate) / (7 * 24 * 60 * 60 * 1000));
-    const estimatedEntries = subjects.reduce((sum, subj) => sum + subj.days.length, 0) * totalWeeks;
+    const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+    const estimatedEntries = subjects.reduce((sum, subj) => sum + subj.days.length, 0) * Math.ceil(totalDays / 7);
 
-    if (!confirm(`This will log all subjects for every week from ${schoolStartDate} to today (approximately ${estimatedEntries} possible entries). Duplicates will be skipped. Proceed?`)) {
+    if (!confirm(`This will log all subjects from ${startVal} to ${endVal} (${totalDays} days, ~${estimatedEntries} possible entries). Duplicates will be skipped. Proceed?`)) {
         return;
     }
 
     let count = 0;
     let skipped = 0;
 
-    // Iterate through each day from start date to today
+    // Iterate through each day in the range
     const current = new Date(startDate);
     current.setHours(0, 0, 0, 0);
-    const endDate = new Date();
-    endDate.setHours(23, 59, 59, 999);
 
     while (current <= endDate) {
         const dayOfWeek = current.getDay(); // 0=Sun, 6=Sat
