@@ -6,6 +6,7 @@ let profile = {
     githubToken: ""
 };
 let isDarkMode = false;
+let schoolStartDate = null; // Date string YYYY-MM-DD when school started
 
 // Schedule & Calendar State
 let subjects = [];
@@ -90,6 +91,14 @@ function loadData() {
         }
     }
 
+    // Load school start date
+    const savedSchoolStart = localStorage.getItem('wcl_school_start');
+    if (savedSchoolStart) {
+        schoolStartDate = savedSchoolStart;
+        const schoolInput = document.getElementById('school-start-date-input');
+        if (schoolInput) schoolInput.value = savedSchoolStart;
+    }
+
     const savedTheme = localStorage.getItem('wcl_theme');
     if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         setTheme(true);
@@ -169,6 +178,7 @@ function saveProfile() {
     const nameVal = document.getElementById('profile-name-input').value.trim();
     const roleVal = document.getElementById('profile-role-input').value.trim();
     const tokenVal = document.getElementById('github-token-input').value.trim();
+    const schoolStartVal = document.getElementById('school-start-date-input').value;
 
     if (!nameVal) {
         showToast("Please enter a valid developer name", "error");
@@ -178,6 +188,15 @@ function saveProfile() {
     profile.name = nameVal;
     profile.role = roleVal || "Part-time Programmer";
     profile.githubToken = tokenVal;
+
+    // Save school start date
+    if (schoolStartVal) {
+        schoolStartDate = schoolStartVal;
+        localStorage.setItem('wcl_school_start', schoolStartVal);
+    } else {
+        schoolStartDate = null;
+        localStorage.removeItem('wcl_school_start');
+    }
 
     saveProfileToStorage();
     updateProfileUI();
@@ -873,6 +892,70 @@ function logAllSubjectsForWeek() {
                 }
             }
         });
+    }
+
+    saveData();
+    renderCalendar();
+    const msg = count > 0 ? `${count} log entries created.` : 'No new entries.';
+    const skipMsg = skipped > 0 ? ` (${skipped} skipped - already logged)` : '';
+    showToast(`✅ ${msg}${skipMsg}`, count > 0 ? "success" : "info");
+}
+
+// ===== LOG ALL SUBJECTS SINCE SCHOOL START =====
+function logAllSubjectsSinceSchoolStart() {
+    if (!schoolStartDate) {
+        showToast("Please set your School Start Date first (Settings > Edit Profile).", "warning");
+        return;
+    }
+    if (subjects.length === 0) {
+        showToast("Add subjects first before batch logging.", "warning");
+        return;
+    }
+
+    const startDate = new Date(schoolStartDate);
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
+    if (startDate > today) {
+        showToast("School start date cannot be in the future.", "error");
+        return;
+    }
+
+    // Confirm with user about the scope
+    const totalWeeks = Math.ceil((today - startDate) / (7 * 24 * 60 * 60 * 1000));
+    const estimatedEntries = subjects.reduce((sum, subj) => sum + subj.days.length, 0) * totalWeeks;
+
+    if (!confirm(`This will log all subjects for every week from ${schoolStartDate} to today (approximately ${estimatedEntries} possible entries). Duplicates will be skipped. Proceed?`)) {
+        return;
+    }
+
+    let count = 0;
+    let skipped = 0;
+
+    // Iterate through each day from start date to today
+    const current = new Date(startDate);
+    current.setHours(0, 0, 0, 0);
+    const endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+
+    while (current <= endDate) {
+        const dayOfWeek = current.getDay(); // 0=Sun, 6=Sat
+        const dateStr = current.toISOString().split('T')[0];
+
+        subjects.forEach(subj => {
+            if (subj.days.includes(dayOfWeek)) {
+                // Check for duplicate
+                const exists = workLogs.some(log => log.date === dateStr && log.description.startsWith(`[${subj.code}]`));
+                if (exists) {
+                    skipped++;
+                } else {
+                    createLogFromSubject(subj, dateStr);
+                    count++;
+                }
+            }
+        });
+
+        current.setDate(current.getDate() + 1);
     }
 
     saveData();

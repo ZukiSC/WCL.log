@@ -101,6 +101,17 @@
                 <p class="text-[10px] text-slate-400 mt-1">Needed only for private repositories. Token is stored only in
                     your local browser.</p>
             </div>
+            <div class="mb-5">
+                <label for="school-start-date-input"
+                    class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+                    <span>School Start Date</span>
+                    <span class="text-[10px] text-slate-400 font-normal">Required for batch logging</span>
+                </label>
+                <input type="date" id="school-start-date-input"
+                    class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <p class="text-[10px] text-slate-400 mt-1">Set the date when the school semester started. Used by "Log
+                    All Since School Start" to create entries for all past weeks.</p>
+            </div>
             <div class="flex justify-end gap-3">
                 <button onclick="closeSettingsModal()"
                     class="px-4 py-2 text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors font-medium text-sm">Cancel</button>
@@ -559,6 +570,11 @@
                                 class="px-3 py-2 text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 hover:bg-brand-100 dark:hover:bg-brand-900/40 rounded-lg font-semibold text-xs transition-all cursor-pointer"
                                 title="Set weekly topics for each subject"><i class="fa-solid fa-pencil"></i></button>
                         </div>
+                        <div>
+                            <button onclick="logAllSubjectsSinceSchoolStart()"
+                                class="w-full px-3 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg font-semibold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"><i
+                                    class="fa-solid fa-clock-rotate-left"></i> Log All Since School Start</button>
+                        </div>
                         <!-- Subject List -->
                         <div id="subject-list" class="space-y-2 max-h-96 overflow-y-auto">
                             <div class="text-center py-6 text-xs text-slate-400"><i
@@ -709,7 +725,8 @@
                         class="py-16 px-6 text-center flex flex-col items-center justify-center no-print">
                         <div
                             class="h-20 w-20 rounded-2xl bg-indigo-50 dark:bg-slate-700 flex items-center justify-center text-indigo-500 dark:text-indigo-400 mb-4 animate-bounce">
-                            <i class="fa-regular fa-folder-open text-4xl"></i></div>
+                            <i class="fa-regular fa-folder-open text-4xl"></i>
+                        </div>
                         <h5 class="text-lg font-bold text-slate-900 dark:text-white mb-1">No Entries Logged Yet</h5>
                         <p class="text-sm text-slate-400 max-w-sm mb-6">Start documenting your contributions. Log your
                             first task using the sidebar form, or load the preconfigured demo data below.</p>
