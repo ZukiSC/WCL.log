@@ -41,6 +41,278 @@
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ===== TABS ===== */
+.tab-btn {
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.tab-btn.active {
+    background: #7c3aed;
+    color: white;
+    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.dark .tab-btn.active {
+    background: #6d28d9;
+    color: white;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 2px;
+    background: #7c3aed;
+    border-radius: 1px;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ===== CALENDAR GRID ===== */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.calendar-header-cell {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #94a3b8;
+    padding: 4px 0;
+}
+
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    position: relative;
+    min-height: 48px;
+    border: 2px solid transparent;
+}
+
+.calendar-day:hover {
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+.calendar-day.other-month {
+    opacity: 0.25;
+    pointer-events: none;
+}
+
+.calendar-day.today {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3);
+}
+
+.calendar-day.selected {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
+}
+
+.calendar-day .day-number {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.calendar-day .day-hours {
+    font-size: 0.55rem;
+    font-weight: 700;
+    margin-top: 1px;
+    padding: 0 3px;
+    border-radius: 3px;
+    line-height: 1.2;
+}
+
+/* Calendar color intensity levels */
+.cal-day-0 {
+    background: #f1f5f9;
+    color: #94a3b8;
+}
+
+.dark .cal-day-0 {
+    background: #1e293b;
+    color: #475569;
+}
+
+.cal-day-1 {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.dark .cal-day-1 {
+    background: #052e16;
+    color: #86efac;
+}
+
+.cal-day-2 {
+    background: #bbf7d0;
+    color: #14532d;
+}
+
+.dark .cal-day-2 {
+    background: #0a3d1a;
+    color: #6ee7b7;
+}
+
+.cal-day-3 {
+    background: #86efac;
+    color: #052e16;
+}
+
+.dark .cal-day-3 {
+    background: #14532d;
+    color: #4ade80;
+}
+
+.cal-day-4 {
+    background: #4ade80;
+    color: #052e16;
+}
+
+.dark .cal-day-4 {
+    background: #166534;
+    color: #22c55e;
+}
+
+.cal-day-5 {
+    background: #22c55e;
+    color: #052e16;
+}
+
+.dark .cal-day-5 {
+    background: #15803d;
+    color: #4ade80;
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar-track {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dark .progress-bar-track {
+    background: #334155;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease, background 0.3s ease;
+}
+
+.progress-bar-fill.green {
+    background: #22c55e;
+}
+
+.progress-bar-fill.yellow {
+    background: #eab308;
+}
+
+.progress-bar-fill.red {
+    background: #ef4444;
+}
+
+/* ===== SCHEDULE DAY CHECKBOXES ===== */
+.day-checkbox-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1.5px solid #cbd5e1;
+    background: transparent;
+    color: #64748b;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.dark .day-checkbox-label {
+    border-color: #475569;
+    color: #94a3b8;
+}
+
+.day-checkbox-label:hover {
+    border-color: #7c3aed;
+    color: #7c3aed;
+}
+
+.day-checkbox-input:checked+.day-checkbox-label {
+    background: #7c3aed;
+    border-color: #7c3aed;
+    color: white;
+}
+
+.dark .day-checkbox-input:checked+.day-checkbox-label {
+    background: #6d28d9;
+    border-color: #6d28d9;
+    color: white;
+}
+
+.day-checkbox-input {
+    display: none;
+}
+
+/* ===== SUBJECT CARD ===== */
+.subject-card {
+    transition: all 0.2s ease;
+}
+
+.subject-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dark .subject-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== WEEKLY TOPIC MODAL ===== */
+.topic-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.dark .topic-input-row {
+    border-bottom-color: #1e293b;
+}
+
+.topic-input-row:last-child {
+    border-bottom: none;
+}
+
 /* Print Media Styles - Engineered for pristine PDF output */
 @media print {
     body {

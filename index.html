@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome for high-quality vector icons -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,28 +18,18 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         brand: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            200: '#ddd6fe',
-                            300: '#c4b5fd',
-                            400: '#a78bfa',
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#4c1d95',
+                            50: '#f5f3ff', 100: '#ede9fe', 200: '#ddd6fe', 300: '#c4b5fd',
+                            400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9',
+                            800: '#5b21b6', 900: '#4c1d95'
                         }
                     }
                 }
             }
         }
     </script>
-    <!-- Link External Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -60,8 +50,6 @@
                 <div class="text-xs text-slate-400 mt-1" id="print-timestamp"></div>
             </div>
         </div>
-
-        <!-- Print Summary Cards -->
         <div class="grid grid-cols-3 gap-4 mt-6 border p-4 rounded-lg bg-slate-50">
             <div>
                 <div class="text-xs text-slate-500 uppercase font-semibold">Total Hours Contribution</div>
@@ -81,7 +69,7 @@
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 no-print"></div>
 
-    <!-- Edit Employee Modal -->
+    <!-- Settings Modal -->
     <div id="settings-modal"
         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden no-print">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full p-6 mx-4 transform transition-all duration-300 scale-95 opacity-0"
@@ -123,12 +111,29 @@
         </div>
     </div>
 
+    <!-- Weekly Topics Modal -->
+    <div id="weekly-topics-modal"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden no-print">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-lg w-full p-6 mx-4 transform transition-all duration-300 scale-95 opacity-0"
+            id="weekly-topics-content">
+            <h3 class="text-lg font-semibold text-slate-900 dark:text-white mb-1">Set Weekly Topics</h3>
+            <p class="text-xs text-slate-400 mb-4" id="weekly-topics-week-label">For Week of July 6 - 12, 2026</p>
+            <div id="weekly-topics-list" class="max-h-64 overflow-y-auto space-y-1 mb-4"></div>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeWeeklyTopicsModal()"
+                    class="px-4 py-2 text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors font-medium text-sm">Cancel</button>
+                <button onclick="saveWeeklyTopics()"
+                    class="px-4 py-2 text-white bg-brand-600 hover:bg-brand-700 rounded-lg transition-colors font-medium text-sm">Save
+                    Topics</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Navigation Bar -->
     <header
         class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700/80 sticky top-0 z-30 no-print transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Branding -->
                 <div class="flex items-center gap-3">
                     <div
                         class="h-10 w-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
@@ -141,10 +146,7 @@
                             Learning Log</span>
                     </div>
                 </div>
-
-                <!-- Theme / Info Panel Controls -->
                 <div class="flex items-center gap-2">
-                    <!-- Quick Profile Indicator -->
                     <button onclick="openSettingsModal()"
                         class="hidden sm:flex items-center gap-2 text-left bg-slate-50 hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg transition-all text-xs font-medium cursor-pointer">
                         <div
@@ -158,8 +160,6 @@
                                 id="nav-profile-role">Part-time Programmer</div>
                         </div>
                     </button>
-
-                    <!-- Theme Toggle -->
                     <button onclick="toggleTheme()"
                         class="p-2 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all cursor-pointer"
                         title="Toggle Light/Dark Theme">
@@ -173,7 +173,7 @@
     <!-- Main Container -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 print-card">
 
-        <!-- Welcome Hero/Profile Banner (No Print) -->
+        <!-- Welcome Hero Banner -->
         <section
             class="mb-8 bg-gradient-to-r from-brand-600 via-indigo-600 to-violet-600 rounded-2xl p-6 sm:p-8 text-white shadow-xl shadow-brand-500/10 flex flex-col md:flex-row md:items-center justify-between gap-6 no-print">
             <div class="space-y-2">
@@ -201,9 +201,9 @@
             </div>
         </section>
 
-        <!-- Stats Bar Dashboard -->
-        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 no-print">
-            <!-- Stat 1 -->
+        <!-- Stats Bar Dashboard (5 columns) -->
+        <section class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8 no-print">
+            <!-- Stat 1: Total Hours -->
             <div
                 class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4 transition-colors duration-300">
                 <div class="p-3 bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 rounded-xl">
@@ -215,7 +215,7 @@
                         id="stat-total-hours">0.0</strong>
                 </div>
             </div>
-            <!-- Stat 2 -->
+            <!-- Stat 2: Total Tasks -->
             <div
                 class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4 transition-colors duration-300">
                 <div class="p-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl">
@@ -227,7 +227,7 @@
                         id="stat-total-tasks">0</strong>
                 </div>
             </div>
-            <!-- Stat 3 -->
+            <!-- Stat 3: Avg Hours / Task -->
             <div
                 class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4 transition-colors duration-300">
                 <div class="p-3 bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 rounded-xl">
@@ -240,16 +240,25 @@
                         id="stat-avg-hours">0.0</strong>
                 </div>
             </div>
-            <!-- Stat 4 -->
+            <!-- Stat 4-5: 21hr Weekly Quota Tracker (spans 2 cols) -->
             <div
-                class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-4 transition-colors duration-300">
-                <div class="p-3 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl">
-                    <i class="fa-solid fa-calendar-days text-xl sm:text-2xl"></i>
+                class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col gap-2 transition-colors duration-300 lg:col-span-2">
+                <div class="flex items-center gap-2">
+                    <div
+                        class="p-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-lg">
+                        <i class="fa-solid fa-calendar-week text-sm"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <span class="text-xs text-slate-400 font-medium uppercase tracking-wider block">21 Hrs / Week
+                            Quota</span>
+                        <strong class="text-lg font-bold text-slate-900 dark:text-white" id="stat-weekly-label">Week of
+                            ...</strong>
+                    </div>
+                    <strong class="text-lg font-bold text-slate-900 dark:text-white" id="stat-weekly-hours">0.0 /
+                        21</strong>
                 </div>
-                <div class="min-w-0">
-                    <span class="text-xs text-slate-400 font-medium uppercase tracking-wider block">Active Period</span>
-                    <strong class="text-sm font-semibold text-slate-900 dark:text-white truncate block"
-                        id="stat-period-range" title="Date Range Covered">N/A</strong>
+                <div class="progress-bar-track">
+                    <div id="weekly-progress-fill" class="progress-bar-fill green" style="width:0%"></div>
                 </div>
             </div>
         </section>
@@ -257,213 +266,363 @@
         <!-- Two Column Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 print-card">
 
-            <!-- Column 1: Log Entry Form (No Print) -->
+            <!-- Column 1: Sidebar with Tabs -->
             <aside class="lg:col-span-1 no-print">
                 <div
-                    class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 sticky top-24 transition-colors duration-300">
-                    <div
-                        class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-700/80 mb-5">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-pen-to-square text-brand-600 dark:text-brand-400"></i>
-                            <h3 class="font-bold text-slate-900 dark:text-white" id="form-title">Log New Activity</h3>
-                        </div>
-                        <span id="edit-indicator"
-                            class="hidden text-[10px] font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-full">
-                            Editing mode
-                        </span>
+                    class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-5 sticky top-24 transition-colors duration-300">
+
+                    <!-- Tab Navigation -->
+                    <div class="flex gap-1 mb-5 bg-slate-100 dark:bg-slate-900/50 rounded-xl p-1">
+                        <button onclick="switchTab('manual')" id="tab-manual"
+                            class="tab-btn active flex-1 px-3 py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-pen-to-square text-xs"></i> Manual
+                        </button>
+                        <button onclick="switchTab('schedule')" id="tab-schedule"
+                            class="tab-btn flex-1 px-3 py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-calendar-plus text-xs"></i> Schedule
+                        </button>
+                        <button onclick="switchTab('calendar')" id="tab-calendar"
+                            class="tab-btn flex-1 px-3 py-2 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 cursor-pointer">
+                            <i class="fa-solid fa-calendar-days text-xs"></i> Calendar
+                        </button>
                     </div>
 
-                    <form id="entry-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                        <!-- Hidden field for edit references -->
-                        <input type="hidden" id="entry-id">
-
-                        <!-- Quick Batch Log Accordion -->
+                    <!-- Tab: Manual Log -->
+                    <div id="tab-content-manual" class="tab-content active">
                         <div
-                            class="border border-emerald-200 dark:border-emerald-800/60 rounded-xl overflow-hidden bg-emerald-50/60 dark:bg-emerald-900/20">
-                            <button type="button" onclick="toggleBatchPanel()"
-                                class="w-full px-4 py-2.5 text-left text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-all flex items-center justify-between cursor-pointer">
-                                <span class="flex items-center gap-2">
-                                    <i class="fa-solid fa-layer-group text-sm"></i>
-                                    <span>Quick Batch Log (Multi-Day)</span>
-                                    <span
-                                        class="text-[9px] bg-emerald-200 dark:bg-emerald-700 text-emerald-800 dark:text-emerald-200 px-1.5 py-0.5 rounded-full">New</span>
-                                </span>
-                                <i id="batch-panel-chevron"
-                                    class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"></i>
-                            </button>
-                            <div id="batch-import-panel"
-                                class="p-3 border-t border-emerald-200 dark:border-emerald-800/60 space-y-3 hidden">
-                                <p class="text-[10px] text-emerald-600 dark:text-emerald-400">Log the same activity
-                                    across multiple days at once. Perfect for tracking daily learning.</p>
-                                <div class="flex gap-2">
-                                    <div class="flex-1">
-                                        <label
-                                            class="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 block mb-0.5">From</label>
-                                        <input type="date" id="batch-start-date"
-                                            class="w-full px-2 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                            class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-700/80 mb-5">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-pen-to-square text-brand-600 dark:text-brand-400"></i>
+                                <h3 class="font-bold text-slate-900 dark:text-white" id="form-title">Log New Activity
+                                </h3>
+                            </div>
+                            <span id="edit-indicator"
+                                class="hidden text-[10px] font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400 px-2 py-0.5 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-full">Editing
+                                mode</span>
+                        </div>
+                        <form id="entry-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                            <input type="hidden" id="entry-id">
+                            <!-- Batch Log Accordion -->
+                            <div
+                                class="border border-emerald-200 dark:border-emerald-800/60 rounded-xl overflow-hidden bg-emerald-50/60 dark:bg-emerald-900/20">
+                                <button type="button" onclick="toggleBatchPanel()"
+                                    class="w-full px-4 py-2.5 text-left text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-all flex items-center justify-between cursor-pointer">
+                                    <span class="flex items-center gap-2"><i
+                                            class="fa-solid fa-layer-group text-sm"></i><span>Quick Batch Log
+                                            (Multi-Day)</span><span
+                                            class="text-[9px] bg-emerald-200 dark:bg-emerald-700 text-emerald-800 dark:text-emerald-200 px-1.5 py-0.5 rounded-full">New</span></span>
+                                    <i id="batch-panel-chevron"
+                                        class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"></i>
+                                </button>
+                                <div id="batch-import-panel"
+                                    class="p-3 border-t border-emerald-200 dark:border-emerald-800/60 space-y-3 hidden">
+                                    <p class="text-[10px] text-emerald-600 dark:text-emerald-400">Log the same activity
+                                        across multiple days at once.</p>
+                                    <div class="flex gap-2">
+                                        <div class="flex-1"><label
+                                                class="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 block mb-0.5">From</label><input
+                                                type="date" id="batch-start-date"
+                                                class="w-full px-2 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                        </div>
+                                        <div class="flex-1"><label
+                                                class="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 block mb-0.5">To</label><input
+                                                type="date" id="batch-end-date"
+                                                class="w-full px-2 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                        </div>
+                                        <div class="w-16"><label
+                                                class="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 block mb-0.5">Hrs/Day</label><input
+                                                type="number" id="batch-hours" min="0.1" max="24" step="0.5" value="2.0"
+                                                class="w-full px-2 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 text-center">
+                                        </div>
                                     </div>
-                                    <div class="flex-1">
-                                        <label
-                                            class="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 block mb-0.5">To</label>
-                                        <input type="date" id="batch-end-date"
-                                            class="w-full px-2 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                    <textarea id="batch-description" rows="2"
+                                        class="w-full px-3 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white placeholder:text-emerald-400 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none"
+                                        placeholder="What did you work on each day?"></textarea>
+                                    <textarea id="batch-learnings" rows="2"
+                                        class="w-full px-3 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white placeholder:text-emerald-400 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none"
+                                        placeholder="Key learnings (same across all days or leave blank)"></textarea>
+                                    <div class="flex gap-2 items-center">
+                                        <button type="button" onclick="handleBatchSubmit()"
+                                            class="flex-grow px-3 py-2 text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg font-semibold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"><i
+                                                class="fa-solid fa-bolt"></i> Quick Log <span
+                                                id="batch-day-count">0</span> Days</button>
+                                        <button type="button" onclick="setLastWeek()"
+                                            class="px-2 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/40 hover:bg-emerald-200 dark:hover:bg-emerald-900/60 rounded-lg text-xs transition-all cursor-pointer"
+                                            title="Set date range to past 7 days"><i
+                                                class="fa-solid fa-calendar-week"></i></button>
                                     </div>
-                                    <div class="w-16">
-                                        <label
-                                            class="text-[9px] font-semibold text-emerald-600 dark:text-emerald-400 block mb-0.5">Hrs/Day</label>
-                                        <input type="number" id="batch-hours" min="0.1" max="24" step="0.5" value="2.0"
-                                            class="w-full px-2 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 text-center">
-                                    </div>
-                                </div>
-                                <textarea id="batch-description" rows="2"
-                                    class="w-full px-3 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white placeholder:text-emerald-400 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none"
-                                    placeholder="What did you work on each day? (e.g. Learned C# fundamentals & software engineering concepts)"></textarea>
-                                <textarea id="batch-learnings" rows="2"
-                                    class="w-full px-3 py-1.5 border border-emerald-200 dark:border-emerald-700 rounded-lg bg-transparent dark:text-white placeholder:text-emerald-400 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 resize-none"
-                                    placeholder="Key learnings (same across all days or leave blank)"></textarea>
-                                <div class="flex gap-2 items-center">
-                                    <button type="button" onclick="handleBatchSubmit()"
-                                        class="flex-grow px-3 py-2 text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg font-semibold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5">
-                                        <i class="fa-solid fa-bolt"></i> Quick Log <span id="batch-day-count">0</span>
-                                        Days
-                                    </button>
-                                    <button type="button" onclick="setLastWeek()"
-                                        class="px-2 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/40 hover:bg-emerald-200 dark:hover:bg-emerald-900/60 rounded-lg text-xs transition-all cursor-pointer"
-                                        title="Set date range to past 7 days">
-                                        <i class="fa-solid fa-calendar-week"></i>
-                                    </button>
                                 </div>
                             </div>
-                        </div>
+                            <!-- GitHub Import Accordion -->
+                            <div
+                                class="border border-slate-200 dark:border-slate-700/80 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900/30">
+                                <button type="button" onclick="toggleGithubPanel()"
+                                    class="w-full px-4 py-2.5 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-all flex items-center justify-between cursor-pointer">
+                                    <span class="flex items-center gap-2"><i
+                                            class="fa-brands fa-github text-sm"></i><span>Import from
+                                            GitHub</span></span>
+                                    <i id="github-panel-chevron"
+                                        class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"></i>
+                                </button>
+                                <div id="github-import-panel"
+                                    class="p-3 border-t border-slate-200 dark:border-slate-700/80 space-y-2 hidden">
+                                    <p class="text-[10px] text-slate-400">Paste a GitHub Commit, PR, or Issue URL to
+                                        auto-fill the form fields below.</p>
+                                    <div class="flex gap-2">
+                                        <input type="text" id="github-url-input"
+                                            class="flex-grow px-3 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent dark:text-white placeholder:text-slate-400 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500"
+                                            placeholder="https://github.com/.../commit/... or /pull/...">
+                                        <button type="button" onclick="importFromGithub()"
+                                            class="px-3 py-1.5 text-white bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 rounded-lg font-semibold text-xs transition-all cursor-pointer">Fetch</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Date -->
+                            <div>
+                                <label for="entry-date"
+                                    class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Date
+                                    Worked</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><i
+                                            class="fa-regular fa-calendar"></i></span>
+                                    <input type="date" id="entry-date" required
+                                        class="w-full pl-10 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all">
+                                </div>
+                            </div>
+                            <!-- Hours -->
+                            <div>
+                                <label for="entry-hours"
+                                    class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Hours
+                                    Invested</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><i
+                                            class="fa-regular fa-clock"></i></span>
+                                    <input type="number" id="entry-hours" required min="0.1" max="24" step="0.1"
+                                        class="w-full pl-10 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                                        placeholder="e.g. 3.5">
+                                </div>
+                                <div class="flex flex-wrap gap-1.5 mt-2">
+                                    <button type="button" onclick="setQuickHours(0.5)"
+                                        class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+0.5
+                                        hrs</button>
+                                    <button type="button" onclick="setQuickHours(1.0)"
+                                        class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+1.0
+                                        hrs</button>
+                                    <button type="button" onclick="setQuickHours(2.0)"
+                                        class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+2.0
+                                        hrs</button>
+                                    <button type="button" onclick="setQuickHours(4.0)"
+                                        class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+4.0
+                                        hrs</button>
+                                    <button type="button" onclick="setQuickHours(8.0)"
+                                        class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+8.0
+                                        hrs</button>
+                                </div>
+                            </div>
+                            <!-- Description -->
+                            <div>
+                                <label for="entry-description"
+                                    class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Task
+                                    Description</label>
+                                <textarea id="entry-description" required rows="3"
+                                    class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-transparent dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all text-sm resize-none"
+                                    placeholder="What specific problem, feature, or activity did you work on?"></textarea>
+                            </div>
+                            <!-- Learnings -->
+                            <div>
+                                <label for="entry-learnings"
+                                    class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Key
+                                    Learning & Technical Insights</label>
+                                <textarea id="entry-learnings" rows="4"
+                                    class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-transparent dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all text-sm resize-none"
+                                    placeholder="Highlight technical learnings, bugs resolved, lessons learned, or frameworks utilized..."></textarea>
+                            </div>
+                            <!-- Buttons -->
+                            <div class="flex gap-2.5 pt-2">
+                                <button type="button" id="cancel-btn" onclick="resetForm()"
+                                    class="flex-1 px-4 py-2.5 text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl transition-all font-semibold text-sm cursor-pointer hidden">Cancel</button>
+                                <button type="submit" id="submit-btn"
+                                    class="flex-grow px-4 py-2.5 text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 rounded-xl shadow-md transition-all font-semibold text-sm cursor-pointer flex items-center justify-center gap-2"><i
+                                        class="fa-solid fa-plus-circle"></i> Add Entry</button>
+                            </div>
+                        </form>
+                    </div>
 
-                        <!-- GitHub Import Accordion -->
+                    <!-- Tab: Schedule Manager -->
+                    <div id="tab-content-schedule" class="tab-content space-y-4">
                         <div
-                            class="border border-slate-200 dark:border-slate-700/80 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900/30">
-                            <button type="button" onclick="toggleGithubPanel()"
-                                class="w-full px-4 py-2.5 text-left text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 transition-all flex items-center justify-between cursor-pointer">
-                                <span class="flex items-center gap-2">
-                                    <i class="fa-brands fa-github text-sm"></i>
-                                    <span>Import from GitHub</span>
-                                </span>
-                                <i id="github-panel-chevron"
-                                    class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"></i>
-                            </button>
-                            <div id="github-import-panel"
-                                class="p-3 border-t border-slate-200 dark:border-slate-700/80 space-y-2 hidden">
-                                <p class="text-[10px] text-slate-400">Paste a GitHub Commit, PR, or Issue URL to
-                                    auto-fill the form fields below.</p>
-                                <div class="flex gap-2">
-                                    <input type="text" id="github-url-input"
-                                        class="flex-grow px-3 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent dark:text-white placeholder:text-slate-400 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500"
-                                        placeholder="https://github.com/.../commit/... or /pull/...">
-                                    <button type="button" onclick="importFromGithub()"
-                                        class="px-3 py-1.5 text-white bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 dark:hover:bg-slate-600 rounded-lg font-semibold text-xs transition-all cursor-pointer">
-                                        Fetch
-                                    </button>
+                            class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/80">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-plus text-brand-600 dark:text-brand-400"></i>
+                                <h3 class="font-bold text-slate-900 dark:text-white text-sm">Schedule Manager</h3>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-medium" id="schedule-subject-count">0
+                                subjects</span>
+                        </div>
+                        <!-- Add Subject Form -->
+                        <div class="space-y-3">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label
+                                        class="text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-0.5 block">Subject
+                                        Code</label>
+                                    <input type="text" id="subj-code" placeholder="e.g. CCS 101"
+                                        class="w-full px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-500">
+                                </div>
+                                <div>
+                                    <label
+                                        class="text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-0.5 block">Credits</label>
+                                    <input type="number" id="subj-credits" min="1" max="6" value="3"
+                                        class="w-full px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-500">
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Date Field -->
-                        <div>
-                            <label for="entry-date"
-                                class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Date
-                                Worked</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                                    <i class="fa-regular fa-calendar"></i>
-                                </span>
-                                <input type="date" id="entry-date" required
-                                    class="w-full pl-10 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all">
+                            <div>
+                                <label
+                                    class="text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-0.5 block">Subject
+                                    Name</label>
+                                <input type="text" id="subj-name" placeholder="e.g. Data Structures & Algorithms"
+                                    class="w-full px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-500">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label
+                                        class="text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-0.5 block">Instructor</label>
+                                    <input type="text" id="subj-instructor" placeholder="Prof. Santos"
+                                        class="w-full px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-500">
+                                </div>
+                                <div>
+                                    <label
+                                        class="text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-0.5 block">Room</label>
+                                    <input type="text" id="subj-room" placeholder="Room 305 / Online"
+                                        class="w-full px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-500">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label
+                                        class="text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-0.5 block">Start
+                                        Time</label>
+                                    <input type="time" id="subj-start"
+                                        class="w-full px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-500">
+                                </div>
+                                <div>
+                                    <label
+                                        class="text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-0.5 block">End
+                                        Time</label>
+                                    <input type="time" id="subj-end"
+                                        class="w-full px-2.5 py-1.5 border border-slate-200 dark:border-slate-700 rounded-lg bg-transparent dark:text-white text-xs focus:outline-none focus:ring-1 focus:ring-brand-500">
+                                </div>
+                            </div>
+                            <!-- Days -->
+                            <div>
+                                <label
+                                    class="text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5 block">Schedule
+                                    Days</label>
+                                <div class="flex gap-1.5">
+                                    <label class="day-checkbox-wrapper"><input type="checkbox"
+                                            class="day-checkbox-input" value="1"><span
+                                            class="day-checkbox-label">M</span></label>
+                                    <label class="day-checkbox-wrapper"><input type="checkbox"
+                                            class="day-checkbox-input" value="2"><span
+                                            class="day-checkbox-label">T</span></label>
+                                    <label class="day-checkbox-wrapper"><input type="checkbox"
+                                            class="day-checkbox-input" value="3"><span
+                                            class="day-checkbox-label">W</span></label>
+                                    <label class="day-checkbox-wrapper"><input type="checkbox"
+                                            class="day-checkbox-input" value="4"><span
+                                            class="day-checkbox-label">Th</span></label>
+                                    <label class="day-checkbox-wrapper"><input type="checkbox"
+                                            class="day-checkbox-input" value="5"><span
+                                            class="day-checkbox-label">F</span></label>
+                                    <label class="day-checkbox-wrapper"><input type="checkbox"
+                                            class="day-checkbox-input" value="6"><span
+                                            class="day-checkbox-label">Sa</span></label>
+                                </div>
+                            </div>
+                            <!-- Buttons -->
+                            <div class="flex gap-2">
+                                <button type="button" onclick="addSubject()" id="add-subject-btn"
+                                    class="flex-1 px-3 py-2 text-white bg-brand-600 hover:bg-brand-700 rounded-lg font-semibold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"><i
+                                        class="fa-solid fa-plus"></i> <span id="add-subject-btn-text">Add
+                                        Subject</span></button>
+                                <button type="button" onclick="resetSubjectForm()" id="cancel-subject-btn"
+                                    class="px-3 py-2 text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg font-semibold text-xs transition-all cursor-pointer hidden">Cancel</button>
                             </div>
                         </div>
+                        <hr class="border-slate-100 dark:border-slate-700/80">
+                        <!-- Log All / Weekly Topics -->
+                        <div class="flex gap-2">
+                            <button onclick="logAllSubjectsForWeek()"
+                                class="flex-1 px-3 py-2 text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg font-semibold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"><i
+                                    class="fa-solid fa-bolt"></i> Log All This Week</button>
+                            <button onclick="openWeeklyTopicsModal()"
+                                class="px-3 py-2 text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-900/20 hover:bg-brand-100 dark:hover:bg-brand-900/40 rounded-lg font-semibold text-xs transition-all cursor-pointer"
+                                title="Set weekly topics for each subject"><i class="fa-solid fa-pencil"></i></button>
+                        </div>
+                        <!-- Subject List -->
+                        <div id="subject-list" class="space-y-2 max-h-96 overflow-y-auto">
+                            <div class="text-center py-6 text-xs text-slate-400"><i
+                                    class="fa-solid fa-book-open text-lg block mb-2 opacity-50"></i>No subjects added
+                                yet. Add your school schedule above.</div>
+                        </div>
+                    </div>
 
-                        <!-- Hours Spent Field -->
-                        <div>
-                            <label for="entry-hours"
-                                class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Hours
-                                Invested</label>
-                            <div class="relative">
-                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                                    <i class="fa-regular fa-clock"></i>
-                                </span>
-                                <input type="number" id="entry-hours" required min="0.1" max="24" step="0.1"
-                                    class="w-full pl-10 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-transparent dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
-                                    placeholder="e.g. 3.5">
-                            </div>
-
-                            <!-- Quick add badges -->
-                            <div class="flex flex-wrap gap-1.5 mt-2">
-                                <button type="button" onclick="setQuickHours(0.5)"
-                                    class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+0.5
-                                    hrs</button>
-                                <button type="button" onclick="setQuickHours(1.0)"
-                                    class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+1.0
-                                    hrs</button>
-                                <button type="button" onclick="setQuickHours(2.0)"
-                                    class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+2.0
-                                    hrs</button>
-                                <button type="button" onclick="setQuickHours(4.0)"
-                                    class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+4.0
-                                    hrs</button>
-                                <button type="button" onclick="setQuickHours(8.0)"
-                                    class="px-2 py-1 text-[10px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-all cursor-pointer">+8.0
-                                    hrs</button>
+                    <!-- Tab: Calendar View -->
+                    <div id="tab-content-calendar" class="tab-content">
+                        <div
+                            class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/80 mb-3">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-days text-brand-600 dark:text-brand-400"></i>
+                                <h3 class="font-bold text-slate-900 dark:text-white text-sm">Activity Calendar</h3>
                             </div>
                         </div>
-
-                        <!-- Task Description Field -->
-                        <div>
-                            <label for="entry-description"
-                                class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Task
-                                Description</label>
-                            <textarea id="entry-description" required rows="3"
-                                class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-transparent dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all text-sm resize-none"
-                                placeholder="What specific problem, feature, or activity did you work on?"></textarea>
+                        <!-- Calendar Nav -->
+                        <div class="flex items-center justify-between mb-3">
+                            <button onclick="calendarPrevMonth()"
+                                class="p-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all cursor-pointer"><i
+                                    class="fa-solid fa-chevron-left text-xs"></i></button>
+                            <strong id="calendar-month-label"
+                                class="text-sm font-bold text-slate-900 dark:text-white">June 2026</strong>
+                            <button onclick="calendarNextMonth()"
+                                class="p-1.5 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-all cursor-pointer"><i
+                                    class="fa-solid fa-chevron-right text-xs"></i></button>
                         </div>
-
-                        <!-- Key Learning / Technical Insight -->
-                        <div>
-                            <label for="entry-learnings"
-                                class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">Key
-                                Learning & Technical Insights</label>
-                            <textarea id="entry-learnings" rows="4"
-                                class="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl bg-transparent dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all text-sm resize-none"
-                                placeholder="Highlight technical learnings, bugs resolved, lessons learned, or frameworks utilized..."></textarea>
+                        <!-- Calendar Mini Stats -->
+                        <div class="flex justify-between text-[10px] text-slate-400 mb-2 px-1">
+                            <span id="calendar-month-hours">This month: 0 hrs</span>
+                            <span id="calendar-today-hours">Today: 0 hrs</span>
                         </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex gap-2.5 pt-2">
-                            <button type="button" id="cancel-btn" onclick="resetForm()"
-                                class="flex-1 px-4 py-2.5 text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl transition-all font-semibold text-sm cursor-pointer hidden">
-                                Cancel
-                            </button>
-                            <button type="submit" id="submit-btn"
-                                class="flex-grow px-4 py-2.5 text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 rounded-xl shadow-md transition-all font-semibold text-sm cursor-pointer flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-plus-circle"></i> Add Entry
-                            </button>
+                        <!-- Calendar Grid -->
+                        <div class="calendar-grid" id="calendar-grid">
+                            <div class="calendar-header-cell">Sun</div>
+                            <div class="calendar-header-cell">Mon</div>
+                            <div class="calendar-header-cell">Tue</div>
+                            <div class="calendar-header-cell">Wed</div>
+                            <div class="calendar-header-cell">Thu</div>
+                            <div class="calendar-header-cell">Fri</div>
+                            <div class="calendar-header-cell">Sat</div>
                         </div>
-                    </form>
+                        <!-- Selected Day Detail -->
+                        <div id="calendar-day-detail" class="mt-3 text-center text-[10px] text-slate-400">Click a day to
+                            filter logs</div>
+                    </div>
+
                 </div>
             </aside>
 
-            <!-- Column 2-3: Logged Entries Table Section -->
+            <!-- Column 2-3: Logged Entries Table -->
             <section class="lg:col-span-2 space-y-6 print-card">
-
-                <!-- Table Filter and Actions bar (No Print) -->
+                <!-- Filter Bar -->
                 <div
                     class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 no-print transition-colors duration-300">
                     <div class="flex-grow max-w-md relative">
-                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                            <i class="fa-solid fa-magnifying-glass text-sm"></i>
-                        </span>
+                        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400"><i
+                                class="fa-solid fa-magnifying-glass text-sm"></i></span>
                         <input type="text" id="search-query" oninput="renderTable()"
                             placeholder="Search description or key learnings..."
                             class="w-full pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl bg-transparent dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent text-sm transition-all">
                     </div>
-
                     <div class="flex flex-wrap gap-2 items-center justify-end">
-                        <!-- Date Filter toggler -->
                         <div
                             class="flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 rounded-xl p-1 bg-slate-50 dark:bg-slate-900/50">
                             <input type="date" id="filter-start" onchange="renderTable()"
@@ -473,51 +632,42 @@
                                 class="bg-transparent text-xs text-slate-600 dark:text-slate-300 focus:outline-none p-1 cursor-pointer">
                             <button onclick="clearDateFilters()"
                                 class="text-slate-400 hover:text-slate-600 dark:hover:text-white px-1.5 cursor-pointer text-xs"
-                                title="Clear Date Filter">
-                                <i class="fa-solid fa-times-circle"></i>
-                            </button>
+                                title="Clear Date Filter"><i class="fa-solid fa-times-circle"></i></button>
                         </div>
-
-                        <!-- Data Backup Actions -->
                         <div class="relative inline-block text-left">
                             <button onclick="toggleDropdown()" id="backup-dropdown-btn"
-                                class="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer">
-                                <i class="fa-solid fa-ellipsis-vertical"></i> Actions
-                            </button>
-                            <!-- Dropdown Menu -->
+                                class="px-3 py-2 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"><i
+                                    class="fa-solid fa-ellipsis-vertical"></i> Actions</button>
                             <div id="backup-dropdown"
                                 class="origin-top-right absolute right-0 mt-2 w-48 rounded-xl shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 z-10 hidden">
                                 <div class="py-1">
                                     <button onclick="triggerExportJSON()"
-                                        class="w-full text-left px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer">
-                                        <i class="fa-solid fa-file-export text-slate-400"></i> Export JSON Backup
-                                    </button>
+                                        class="w-full text-left px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer"><i
+                                            class="fa-solid fa-file-export text-slate-400"></i> Export JSON
+                                        Backup</button>
                                     <button onclick="triggerImportClick()"
-                                        class="w-full text-left px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer">
-                                        <i class="fa-solid fa-file-import text-slate-400"></i> Import JSON Backup
-                                    </button>
+                                        class="w-full text-left px-4 py-2 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer"><i
+                                            class="fa-solid fa-file-import text-slate-400"></i> Import JSON
+                                        Backup</button>
                                     <input type="file" id="import-file-input" onchange="handleImportJSON(event)"
                                         accept=".json" class="hidden">
                                     <hr class="border-slate-100 dark:border-slate-700 my-1">
                                     <button onclick="loadDemoData()"
-                                        class="w-full text-left px-4 py-2 text-xs text-brand-600 dark:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer font-semibold">
-                                        <i class="fa-solid fa-wand-magic-sparkles text-brand-400"></i> Load Demo Logs
-                                    </button>
+                                        class="w-full text-left px-4 py-2 text-xs text-brand-600 dark:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2 cursor-pointer font-semibold"><i
+                                            class="fa-solid fa-wand-magic-sparkles text-brand-400"></i> Load Demo
+                                        Logs</button>
                                     <button onclick="triggerClearAll()"
-                                        class="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 cursor-pointer font-semibold">
-                                        <i class="fa-solid fa-trash-can text-red-400"></i> Clear All Data
-                                    </button>
+                                        class="w-full text-left px-4 py-2 text-xs text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 cursor-pointer font-semibold"><i
+                                            class="fa-solid fa-trash-can text-red-400"></i> Clear All Data</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Main Activity Log Table Container -->
+                <!-- Table Container -->
                 <div
                     class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden print-card transition-colors duration-300">
-
-                    <!-- Top section showing visible logs info (No print) -->
                     <div
                         class="px-6 py-4 border-b border-slate-100 dark:border-slate-700/80 flex items-center justify-between no-print">
                         <h4 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -526,14 +676,10 @@
                                 class="text-xs font-normal text-slate-500 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full">0
                                 entries</span>
                         </h4>
-                        <div class="text-xs text-slate-400 font-medium">
-                            <span class="sm:inline hidden">Show your employer your key technical contributions.</span>
-                        </div>
+                        <div class="text-xs text-slate-400 font-medium"><span class="sm:inline hidden">Show your
+                                employer your key technical contributions.</span></div>
                     </div>
-
-                    <!-- Responsive Desktop Table / Mobile Cards Grid -->
                     <div class="overflow-x-auto">
-                        <!-- Desktop Table view -->
                         <table
                             class="w-full print-table text-sm text-left text-slate-500 dark:text-slate-400 hidden md:table">
                             <thead
@@ -554,38 +700,26 @@
                                 </tr>
                             </thead>
                             <tbody id="entries-tbody" class="divide-y divide-slate-100 dark:divide-slate-700/80">
-                                <!-- JS Inject Rows -->
                             </tbody>
                         </table>
-
-                        <!-- Mobile Card List View -->
                         <div id="entries-mobile-list"
-                            class="block md:hidden divide-y divide-slate-100 dark:divide-slate-700/80 no-print">
-                            <!-- JS Inject Mobile Cards -->
-                        </div>
+                            class="block md:hidden divide-y divide-slate-100 dark:divide-slate-700/80 no-print"></div>
                     </div>
-
-                    <!-- Empty State Graphic -->
                     <div id="empty-state"
                         class="py-16 px-6 text-center flex flex-col items-center justify-center no-print">
                         <div
                             class="h-20 w-20 rounded-2xl bg-indigo-50 dark:bg-slate-700 flex items-center justify-center text-indigo-500 dark:text-indigo-400 mb-4 animate-bounce">
-                            <i class="fa-regular fa-folder-open text-4xl"></i>
-                        </div>
+                            <i class="fa-regular fa-folder-open text-4xl"></i></div>
                         <h5 class="text-lg font-bold text-slate-900 dark:text-white mb-1">No Entries Logged Yet</h5>
-                        <p class="text-sm text-slate-400 max-w-sm mb-6">
-                            Start documenting your contributions. Log your first task using the sidebar form, or load
-                            the preconfigured demo data below.
-                        </p>
+                        <p class="text-sm text-slate-400 max-w-sm mb-6">Start documenting your contributions. Log your
+                            first task using the sidebar form, or load the preconfigured demo data below.</p>
                         <div class="flex flex-wrap gap-2.5 justify-center">
                             <button onclick="loadDemoData()"
-                                class="px-4 py-2 border border-brand-500 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-xl text-xs font-semibold transition-all cursor-pointer">
-                                <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Load Demo Data
-                            </button>
+                                class="px-4 py-2 border border-brand-500 text-brand-600 dark:text-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-xl text-xs font-semibold transition-all cursor-pointer"><i
+                                    class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Load Demo Data</button>
                             <button onclick="focusForm()"
-                                class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-semibold shadow-md transition-all cursor-pointer">
-                                <i class="fa-solid fa-plus mr-1.5"></i> Add First Entry
-                            </button>
+                                class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-semibold shadow-md transition-all cursor-pointer"><i
+                                    class="fa-solid fa-plus mr-1.5"></i> Add First Entry</button>
                         </div>
                     </div>
                 </div>
@@ -593,11 +727,10 @@
         </div>
     </main>
 
-    <!-- Formal PDF Sign-off Footer Section -->
+    <!-- Footer -->
     <footer
         class="mt-auto py-8 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Print-only Signature block -->
             <div class="hidden print-only mt-16 pt-8">
                 <div class="grid grid-cols-2 gap-16 text-sm">
                     <div>
@@ -614,17 +747,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-center text-[10px] text-slate-400 mt-12 border-t pt-4">
-                    Report compiled from work Contribution and Learning logs. All calculations are verify verified.
-                </div>
+                <div class="text-center text-[10px] text-slate-400 mt-12 border-t pt-4">Report compiled from work
+                    Contribution and Learning logs. All calculations are verify verified.</div>
             </div>
-
-            <!-- Page Regular Footer -->
             <div
                 class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 dark:text-slate-500 no-print">
-                <p>
-                    &copy; <span id="current-year"></span> Work Contribution & Learning Log. Made for programmers.
-                </p>
+                <p>&copy; <span id="current-year"></span> Work Contribution & Learning Log. Made for programmers.</p>
                 <div class="flex gap-4">
                     <button onclick="openSettingsModal()"
                         class="hover:text-slate-600 dark:hover:text-white cursor-pointer transition-colors">Developer
@@ -638,7 +766,6 @@
         </div>
     </footer>
 
-    <!-- Load External App Scripts -->
     <script src="assets/js/app.js" defer></script>
 </body>
 
