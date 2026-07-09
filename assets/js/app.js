@@ -634,42 +634,6 @@ function handleImportJSON(event) {
     reader.readAsText(file);
 }
 
-// Load demo data
-function loadDemoData() {
-    const demoLogs = [
-        {
-            id: "demo_1",
-            date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            hours: 6.5,
-            description: "Built the database migration schema and repository patterns for user profiles using Drizzle ORM and PostgreSQL.",
-            learnings: "Deepened knowledge in structured database indexing. Solved a circular dependency bug in relational definitions between workspace profiles."
-        },
-        {
-            id: "demo_2",
-            date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            hours: 4.0,
-            description: "Optimized dashboard charts queries to aggregate hourly metrics efficiently using raw CTE queries.",
-            learnings: "Learned how PostgreSQL handles subqueries and index scans. SQL optimization reduced database load from 450ms query response to 28ms."
-        },
-        {
-            id: "demo_3",
-            date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-            hours: 8.0,
-            description: "Refactored user authentication endpoints to support Multi-Factor Authentication (MFA) via TOTP.",
-            learnings: "Acquired insights into standard cryptographic algorithms (HMAC/SHA1) for generating time-based one-time passwords. Implemented secure recovery code cycles."
-        }
-    ];
-
-    if (workLogs.length > 0) {
-        if (!confirm("This will merge or overwrite current logs. Proceed to load demo logs?")) return;
-    }
-
-    workLogs = [...demoLogs, ...workLogs];
-    saveData();
-    renderCalendar();
-    showToast("Demo contribution logs loaded.", "success");
-}
-
 // ===== TAB SWITCHING =====
 function switchTab(tab) {
     // Update tab buttons
