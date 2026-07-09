@@ -8,10 +8,21 @@ let profile = {
 let isDarkMode = false;
 let schoolStartDate = null; // Date string YYYY-MM-DD when school started
 
+// Date Helpers
+function parseLocalDate(dateStr) {
+    if (!dateStr) return new Date();
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+}
+
+function getLocalISODate(date = new Date()) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
 // Schedule & Calendar State
 let subjects = [];
 let weeklyTopics = {}; // key: `${subjectId}_${weekKey}`, value: topic string
-let calendarViewDate = new Date(2026, 5, 1); // June 1, 2026
+let calendarViewDate = new Date();
 let calendarSelectedDate = null;
 
 // Initialize Application
@@ -230,7 +241,7 @@ function setTheme(dark) {
 function resetFormDate() {
     const dateInput = document.getElementById('entry-date');
     if (dateInput) {
-        const today = new Date().toISOString().split('T')[0];
+        const today = getLocalISODate(new Date());
         dateInput.value = today;
     }
 }
@@ -260,6 +271,7 @@ function clearDateFilters() {
         calendarSelectedDate = null;
         renderCalendar();
     }
+    resetFormDate();
     renderTable();
     showToast("Date filters cleared", "info");
 }
@@ -369,7 +381,7 @@ function updateCalculations() {
 
     let dateText = "N/A";
     if (totalTasks > 0) {
-        const dates = workLogs.map(log => new Date(log.date));
+        const dates = workLogs.map(log => parseLocalDate(log.date));
         const minDate = new Date(Math.min.apply(null, dates));
         const maxDate = new Date(Math.max.apply(null, dates));
 
@@ -384,7 +396,10 @@ function updateCalculations() {
     document.getElementById('stat-total-hours').textContent = totalHours.toFixed(1);
     document.getElementById('stat-total-tasks').textContent = totalTasks;
     document.getElementById('stat-avg-hours').textContent = avgHours.toFixed(1);
-    document.getElementById('stat-period-range').textContent = dateText;
+    const periodRangeEl = document.getElementById('stat-period-range');
+    if (periodRangeEl) {
+        periodRangeEl.textContent = dateText;
+    }
 
     document.getElementById('print-stat-hours').textContent = `${totalHours.toFixed(1)} hrs`;
     document.getElementById('print-stat-tasks').textContent = totalTasks;
@@ -405,7 +420,7 @@ function updateWeeklyTracker() {
 
     let weekHours = 0;
     workLogs.forEach(log => {
-        const logDate = new Date(log.date + 'T00:00:00');
+        const logDate = parseLocalDate(log.date);
         if (logDate >= monday && logDate <= sunday) {
             weekHours += parseFloat(log.hours || 0);
         }
@@ -447,18 +462,22 @@ function renderTable() {
 
         let matchesStart = true;
         if (filterStart) {
-            matchesStart = new Date(log.date) >= new Date(filterStart + 'T00:00:00');
+            matchesStart = log.date >= filterStart;
         }
 
         let matchesEnd = true;
         if (filterEnd) {
-            matchesEnd = new Date(log.date) <= new Date(filterEnd + 'T23:59:59');
+            matchesEnd = log.date <= filterEnd;
         }
 
         return matchesSearch && matchesStart && matchesEnd;
     });
 
-    filteredLogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+    filteredLogs.sort((a, b) => {
+        if (a.date < b.date) return 1;
+        if (a.date > b.date) return -1;
+        return 0;
+    });
 
     const tbody = document.getElementById('entries-tbody');
     const mobileList = document.getElementById('entries-mobile-list');
@@ -482,7 +501,7 @@ function renderTable() {
     let mobileHTML = '';
 
     filteredLogs.forEach(log => {
-        const formattedDate = new Date(log.date).toLocaleDateString('en-US', {
+        const formattedDate = parseLocalDate(log.date).toLocaleDateString('en-US', {
             weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
         });
 
@@ -830,7 +849,7 @@ function logSubjectToday(subjectId) {
         return;
     }
 
-    createLogFromSubject(subj, today.toISOString().split('T')[0]);
+    createLogFromSubject(subj, getLocalISODate(today));
 }
 
 function logAllSubjectsForWeek() {
@@ -842,7 +861,7 @@ function logAllSubjectsForWeek() {
         const day = new Date(monday);
         day.setDate(monday.getDate() + i);
         const dayOfWeek = day.getDay(); // 0=Sun, 6=Sat
-        const dateStr = day.toISOString().split('T')[0];
+        const dateStr = getLocalISODate(day);
 
         subjects.forEach(subj => {
             if (subj.days.includes(dayOfWeek)) {
@@ -905,7 +924,7 @@ function logSubjectsInRange() {
 
     while (current <= endDate) {
         const dayOfWeek = current.getDay(); // 0=Sun, 6=Sat
-        const dateStr = current.toISOString().split('T')[0];
+        const dateStr = getLocalISODate(current);
 
         subjects.forEach(subj => {
             if (subj.days.includes(dayOfWeek)) {
@@ -932,7 +951,7 @@ function logSubjectsInRange() {
 
 function createLogFromSubject(subj, dateStr) {
     const hours = computeHours(subj.startTime, subj.endTime);
-    const weekKey = getWeekKey(new Date(dateStr));
+    const weekKey = getWeekKey(parseLocalDate(dateStr));
     const topic = weeklyTopics[`${subj.id}_${weekKey}`] || '';
 
     const description = `[${subj.code}] ${subj.name} | ${subj.room} | Instructor: ${subj.instructor}`;
@@ -1044,7 +1063,7 @@ function renderCalendar() {
 
     // Month total and today
     const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
+    const todayStr = getLocalISODate(today);
     let monthTotal = 0;
 
     // First day of month and last day
@@ -1125,8 +1144,23 @@ function selectCalendarDay(dateStr) {
     document.getElementById('filter-end').value = dateStr;
     renderTable();
 
+    const entryDateInput = document.getElementById('entry-date');
+    if (entryDateInput) {
+        entryDateInput.value = dateStr;
+    }
+
+    const formattedDate = parseLocalDate(dateStr).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
     document.getElementById('calendar-day-detail').innerHTML =
-        `📅 <strong>${new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}</strong> — showing filtered logs`;
+        `📅 <strong>${formattedDate}</strong> — showing filtered logs <button onclick="addEntryForDate('${dateStr}')" class="ml-2 px-2 py-0.5 text-[9px] font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/30 hover:bg-brand-100 dark:hover:bg-brand-900/40 rounded border border-brand-200 dark:border-brand-800 transition-all cursor-pointer">Log for this day</button>`;
+}
+
+function addEntryForDate(dateStr) {
+    const entryDateInput = document.getElementById('entry-date');
+    if (entryDateInput) {
+        entryDateInput.value = dateStr;
+    }
+    switchTab('manual');
+    focusForm();
 }
 
 // ===== BATCH LOG (existing) =====
@@ -1163,8 +1197,8 @@ function setLastWeek() {
     const today = new Date();
     const weekAgo = new Date(today);
     weekAgo.setDate(today.getDate() - 6);
-    document.getElementById('batch-start-date').value = weekAgo.toISOString().split('T')[0];
-    document.getElementById('batch-end-date').value = today.toISOString().split('T')[0];
+    document.getElementById('batch-start-date').value = getLocalISODate(weekAgo);
+    document.getElementById('batch-end-date').value = getLocalISODate(today);
     updateBatchDayCount();
 }
 
@@ -1186,7 +1220,7 @@ function handleBatchSubmit() {
     let count = 0;
     const current = new Date(s);
     while (current <= e) {
-        const dateStr = current.toISOString().split('T')[0];
+        const dateStr = getLocalISODate(current);
         const newLog = {
             id: 'log_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
             date: dateStr,
@@ -1322,11 +1356,15 @@ function renderPrintSummaryTable() {
         return;
     }
 
-    const sorted = [...workLogs].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const sorted = [...workLogs].sort((a, b) => {
+        if (a.date < b.date) return 1;
+        if (a.date > b.date) return -1;
+        return 0;
+    });
 
     let html = '';
     sorted.forEach(log => {
-        const formattedDate = new Date(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const formattedDate = parseLocalDate(log.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
         const desc = log.description || '';
         const shortDesc = desc.length > 100 ? desc.substring(0, 97) + '...' : desc;
         const learn = log.learnings || '';
